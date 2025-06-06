@@ -5,7 +5,7 @@
 
 Пример:
 
-![[Pasted image 20250606165902.png|700]]
+![image](https://github.com/user-attachments/assets/c3ef1d7f-305e-4d74-84b7-9e8ec9773f3e)
 
 ## Ключевые возможности
 
