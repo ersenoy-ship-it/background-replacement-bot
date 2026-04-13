@@ -7,7 +7,7 @@ from rembg import remove, new_session
 from .config import MODEL, TEMPLATE_PATH
 
 BACKGROUND = Image.open(TEMPLATE_PATH).convert("RGBA")
-SESSION = new_session(MODEL)
+SESSION = new_session("u2netp")
 
 
 def remove_bg(img_bytes: bytes) -> Image.Image:
