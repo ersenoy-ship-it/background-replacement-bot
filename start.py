@@ -1,4 +1,5 @@
 # start.py
+import os
 import threading
 from bot.handlers import run_bot
 from webserver import app
