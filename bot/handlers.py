@@ -23,23 +23,35 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     msg = update.message
     tg_photo = msg.photo[-1]
+    
+    # Ограничение размера файла (уже есть, хорошо)
     if tg_photo.file_size > 8 * 1024 * 1024:  # 8 МБ
         return await msg.reply_text("Файл слишком большой (> 8 МБ).")
+
+    # Сообщаем пользователю, что процесс пошёл
+    status_msg = await msg.reply_text("⏳ Обрабатываю фото...")
 
     file = await tg_photo.get_file()
     img_bytes = await file.download_as_bytearray()
 
     try:
-        fg = remove_bg(img_bytes)  # вырезаем объект
-        result_bytes = replace_bg(fg)  # кладём на фон
-        await msg.reply_photo(result_bytes, caption="Готово ✅")
+        # Удаляем фон
+        fg = remove_bg(img_bytes)
+        
+        # Накладываем на шаблон
+        result_bytes = replace_bg(fg)
+        
+        # Отправляем результат
+        await msg.reply_photo(result_bytes, caption="✅ Готово!")
+        await status_msg.delete()  # удаляем сообщение "Обрабатываю..."
+        
     except UnidentifiedImageError:
-        await msg.reply_text("Не удалось прочитать изображение. Отправьте PNG/JPG.")
+        await status_msg.edit_text("❌ Не удалось прочитать изображение. Отправьте PNG/JPG.")
     except MemoryError:
-        await msg.reply_text("Изображение слишком большое для обработки. Попробуйте меньшее.")
+        await status_msg.edit_text("❌ Изображение слишком большое для обработки. Попробуйте меньшее (до 2000x2000 пикселей).")
     except Exception as e:
         logger.exception("Ошибка обработки фото")
-        await msg.reply_text("⚠️ Что-то пошло не так. Попробуйте ещё раз.")
+        await status_msg.edit_text("⚠️ Что-то пошло не так. Попробуйте ещё раз.")
 
 
 # ────────── глобальный error handler ──────────
