@@ -1,14 +1,12 @@
 # start.py
 import os
+import sys
 import threading
-from bot.handlers import run_bot
-from webserver import app
+
+# Добавляем папку с ботом в путь
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from bot.handlers import main
 
 if __name__ == "__main__":
-    # Запускаем бота в отдельном потоке
-    bot_thread = threading.Thread(target=run_bot, daemon=True)
-    bot_thread.start()
-    
-    # Запускаем Flask-сервер в основном потоке
-    port = int(os.environ.get('PORT', 10000))
-    app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False)
+    main()
